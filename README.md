@@ -1,1 +1,3 @@
 Projekt in Bearbeitung...
+
+Für dieses Projekt wird SQLite als Datenbank verwendet. Die Datenbankverbindung wird über SQLAlchemy hergestellt. Die Verbindung wird in der Datei config.py hergestellt und die Initialisierung und das automatische Erstellen der Tabellen erfolgt in app.py.
