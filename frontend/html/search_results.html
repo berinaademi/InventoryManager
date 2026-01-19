@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suchergebnisse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <style>
+        .search-content {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-header {
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 28px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+        }
+
+        .search-query {
+            color: #7fc4d4;
+            font-weight: 500;
+        }
+
+        .search-stats {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .results-section {
+            margin-bottom: 40px;
+
+            h2 {
+                font-size: 22px;
+                color: #2c5f6f;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #7fc4d4;
+            }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        .result-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #7fc4d4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c5f6f;
+            margin-bottom: 5px;
+        }
+
+        .result-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .result-detail {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .result-detail-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+
+            i {
+                font-size: 64px;
+                color: #ccc;
+                margin-bottom: 20px;
+            }
+
+            h3 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <div class="main-content">
+            <div class="search-content">
+                <div class="search-header">
+                    <h1>Suchergebnisse für <span class="search-query" id="searchQuery">""</span></h1>
+                    <p class="search-stats" id="searchStats">Laden...</p>
+                </div>
+
+                <div class="results-section" id="roomsSection" style="display: none;">
+                    <h2><i class="fas fa-door-open"></i> Räume</h2>
+                    <div class="results-grid" id="roomsResults"></div>
+                </div>
+
+                <div class="results-section" id="itemsSection" style="display: none;">
+                    <h2><i class="fas fa-box"></i> Artikel</h2>
+                    <div class="results-grid" id="itemsResults"></div>
+                </div>
+
+                <div class="no-results" id="noResults" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>Keine Ergebnisse gefunden</h3>
+                    <p>Versuche es mit anderen Suchbegriffen</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/frontend/js/components.js"></script>
+    <script>
+        const API_URL = "http://127.0.0.1:5000/api";
+        const userId = localStorage.getItem('user_id');
+
+        if (!userId) {
+            window.location.href = 'login.html';
+        }
+
+        // Suchanfrage aus URL holen    
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('q') || '';
+
+        document.getElementById('searchQuery').textContent = `"${searchQuery}"`;
+
+        async function performSearch() {
+            if (!searchQuery.trim()) {
+                document.getElementById('searchStats').textContent = 'Bitte gib einen Suchbegriff ein';
+                document.getElementById('noResults').style.display = 'block';
+                return;
+            }
+
+            try {
+                // User's Räume laden
+                const roomsResponse = await fetch(`${API_URL}/rooms/`);
+                const allRooms = await roomsResponse.json();
+                const userRooms = allRooms.filter(room => room.user_id == userId);
+
+                const itemsResponse = await fetch(`${API_URL}/items/`);
+                const allItems = await itemsResponse.json();
+                const userItems = allItems.filter(item => 
+                    userRooms.some(room => room.id === item.room_id)
+                );
+
+                // In Räumen suchen
+                const searchLower = searchQuery.toLowerCase();
+                const matchingRooms = userRooms.filter(room => 
+                    room.name.toLowerCase().includes(searchLower) ||
+                    (room.description && room.description.toLowerCase().includes(searchLower))
+                );
+
+                // In Artikeln suchen
+                const matchingItems = userItems.filter(item =>
+                    item.name.toLowerCase().includes(searchLower) ||
+                    (item.category && item.category.toLowerCase().includes(searchLower))
+                );
+
+                // Raum Map für Lagerort Namen erstellen
+                const roomMap = {};
+                userRooms.forEach(room => {
+                    roomMap[room.id] = room.name;
+                });
+
+                displayResults(matchingRooms, matchingItems, roomMap);
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('searchStats').textContent = 'Fehler bei der Suche';
+            }
+        }
+
+        function displayResults(rooms, items, roomMap) {
+            const totalResults = rooms.length + items.length;
+            document.getElementById('searchStats').textContent = 
+                `${totalResults} ${totalResults === 1 ? 'Ergebnis' : 'Ergebnisse'} gefunden`;
+
+            if (totalResults === 0) {
+                document.getElementById('noResults').style.display = 'block';
+                return;
+            }
+
+            // Räume anzeigen
+            if (rooms.length > 0) {
+                document.getElementById('roomsSection').style.display = 'block';
+                const roomsGrid = document.getElementById('roomsResults');
+                roomsGrid.innerHTML = rooms.map(room => `
+                    <div class="result-card" onclick="window.location.href='rooms.html?room_id=${room.id}'">
+                        <div class="result-card-header">
+                            <div class="result-icon">
+                                <i class="fas fa-door-open"></i>
+                            </div>
+                            <div class="result-info">
+                                <div class="result-title">${room.name}</div>
+                                <div class="result-subtitle">Raum</div>
+                            </div>
+                        </div>
+                        ${room.description ? `<p class="result-subtitle">${room.description}</p>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            if (items.length > 0) {
+                document.getElementById('itemsSection').style.display = 'block';
+                const itemsGrid = document.getElementById('itemsResults');
+                itemsGrid.innerHTML = items.map(item => `
+                    <div class="result-card" onclick="window.location.href='rooms.html?room_id=${item.room_id}'">
+                        <div class="result-card-header">
+                            <div class="result-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="result-info">
+                                <div class="result-title">${item.name}</div>
+                                <div class="result-subtitle">${roomMap[item.room_id] || 'Unbekannt'}</div>
+                            </div>
+                        </div>
+                        <div class="result-details">
+                            <div class="result-detail">
+                                <span class="result-detail-label">Menge:</span> ${item.amount}
+                            </div>
+                            <div class="result-detail">
+                                <span class="result-detail-label">Preis:</span> ${item.price ? item.price.toFixed(2) + '€' : '-'}
+                            </div>
+                            ${item.expiry_date ? `
+                                <div class="result-detail">
+                                    <span class="result-detail-label">Ablaufdatum:</span> ${item.expiry_date}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        performSearch();
+    </script>
+</body>
+</html>

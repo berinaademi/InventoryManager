@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lagerorte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <style>
+        .locations-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 24px;
+                color: #333;
+            }
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .room-card {
+            background-color: #2c5f6f;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        .room-card-header {
+            background-color: #2c5f6f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+
+            h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .add-item-btn {
+            background-color: white;
+            color: #2c5f6f;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+
+            &:hover {
+                background-color: #f0f0f0;
+            }
+        }
+
+        .room-card-body {
+            background-color: white;
+            padding: 30px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room-icon {
+            font-size: 80px;
+            color: #2c5f6f;
+        }
+
+        .add-room-card {
+            background-color: #e8f5f7;
+            border: 3px dashed #7fc4d4;
+            border-radius: 15px;
+            padding: 60px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 250px;
+
+            &:hover {
+                background-color: #d0eef3;
+                transform: translateY(-5px);
+            }
+        }
+
+        .add-room-card-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #2c5f6f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+
+            i {
+                font-size: 48px;
+                color: white;
+            }
+        }
+
+        .add-room-card-text {
+            font-size: 18px;
+            color: #7fc4d4;
+            font-weight: 500;
+        }
+
+        .add-room-btn {
+            display: none;
+        }
+
+        .modal-form-group input,
+        .modal-form-group textarea,
+        .modal-form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            background-color: white;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .modal-form-group input::placeholder,
+        .modal-form-group textarea::placeholder {
+            color: #999;
+        }
+
+        .modal-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-form-group select {
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .select-wrapper {
+            position: relative;
+
+            select {
+                width: 100%;
+                padding: 12px 15px;
+                padding-right: 40px;
+                border: none;
+                border-radius: 5px;
+                background-color: white;
+                font-size: 14px;
+                cursor: pointer;
+                appearance: none;
+
+            }
+
+            i {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                color: #333;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <div class="main-content">
+            <div class="locations-content">
+                <div class="page-header">
+                    <h1>Klicke auf + um einen Artikel hinzuzufügen</h1>
+                </div>
+
+                <div class="rooms-grid" id="roomsGrid">
+                    <div class="loading">Laden...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Room Modal -->
+    <div class="modal" id="addRoomModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAddRoomModal()">&times;</button>
+            <h2>Raum hinzufügen</h2>
+            <div class="modal-error" id="roomModalError"></div>
+            <form id="addRoomForm">
+                <div class="modal-form-group">
+                    <input type="text" id="roomName" placeholder="Name*" required>
+                </div>
+                <div class="modal-form-group">
+                    <textarea id="roomDescription" placeholder="Beschreibung"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-modal btn-modal-submit" id="submitRoomBtn">Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal" id="addItemModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAddItemModal()">&times;</button>
+            <h2>Artikel hinzufügen</h2>
+            <div class="modal-error" id="itemModalError"></div>
+            <form id="addItemForm">
+                <div class="modal-form-group">
+                    <input type="text" id="itemName" placeholder="Name*" required>
+                </div>
+                <div class="modal-form-group">
+                    <input type="number" id="itemAmount" placeholder="Menge*" min="0" required>
+                </div>
+                <div class="modal-form-group">
+                    <input type="number" id="itemPrice" placeholder="Preis*" step="0.01" min="0" required>
+                </div>
+                <div class="modal-form-group">
+                    <div class="select-wrapper">
+                        <select id="itemCategory" required>
+                            <option value="">Kategorie*</option>
+                            <option value="Standardartikel">Standardartikel</option>
+                            <option value="Ablaufartikel">Ablaufartikel</option>
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="modal-form-group" id="expiryDateGroup" style="display: none;">
+                    <input type="date" id="itemExpiryDate" placeholder="Ablaufdatum*">
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-modal btn-modal-submit" id="submitItemBtn">Hinzufügen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/frontend/js/components.js"></script>
+    <script>
+        const API_URL = "http://127.0.0.1:5000/api";
+        const userId = localStorage.getItem('user_id');
+        let currentRoomId = null;
+
+        if (!userId) {
+            window.location.href = 'login.html';
+        }
+
+        // Raum Icon Zuordnung
+        const roomIcons = {
+            'küche': 'fa-utensils',
+            'kitchen': 'fa-utensils',
+            'badezimmer': 'fa-bath',
+            'bathroom': 'fa-bath',
+            'bad': 'fa-bath',
+            'büro': 'fa-laptop',
+            'office': 'fa-laptop',
+            'garage': 'fa-warehouse',
+            'schlafzimmer': 'fa-bed',
+            'bedroom': 'fa-bed',
+            'wohnzimmer': 'fa-couch',
+            'living': 'fa-couch',
+            'default': 'fa-door-open'
+        };
+
+        function getRoomIcon(roomName) {
+            const name = roomName.toLowerCase();
+            for (const [key, icon] of Object.entries(roomIcons)) {
+                if (name.includes(key)) {
+                    return icon;
+                }
+            }
+            return roomIcons.default;
+        }
+
+        async function loadRooms() {
+            try {
+                const response = await fetch(`${API_URL}/rooms/`);
+                const rooms = await response.json();
+                const userRooms = rooms.filter(room => room.user_id == userId);
+                displayRooms(userRooms);
+            } catch (error) {
+                console.error('Error loading rooms:', error);
+                document.getElementById('roomsGrid').innerHTML = '<div class="loading">Fehler beim Laden der Räume</div>';
+            }
+        }
+
+        function displayRooms(rooms) {
+            const grid = document.getElementById('roomsGrid');
+            
+            const roomCards = rooms.map(room => `
+                <div class="room-card">
+                    <div class="room-card-header">
+                        <h3>${room.name}</h3>
+                        <button class="add-item-btn" onclick="openAddItemModal(${room.id}); event.stopPropagation();">+</button>
+                    </div>
+                    <div class="room-card-body" onclick="window.location.href='rooms.html?room_id=${room.id}'">
+                        <i class="fas ${getRoomIcon(room.name)} room-icon"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            const addCard = `
+                <div class="add-room-card" onclick="openAddRoomModal()">
+                    <div class="add-room-card-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="add-room-card-text">Raum hinzufügen</div>
+                </div>
+            `;
+
+            grid.innerHTML = roomCards + addCard;
+        }
+
+        // Raum Modal Funktionen
+        function openAddRoomModal() {
+            document.getElementById('addRoomModal').classList.add('show');
+            document.getElementById('roomName').focus();
+        }
+
+        function closeAddRoomModal() {
+            document.getElementById('addRoomModal').classList.remove('show');
+            document.getElementById('addRoomForm').reset();
+            document.getElementById('roomModalError').style.display = 'none';
+        }
+
+        document.getElementById('addRoomModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAddRoomModal();
+        });
+
+        document.getElementById('addRoomForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const modalError = document.getElementById('roomModalError');
+            const submitBtn = document.getElementById('submitRoomBtn');
+            modalError.style.display = 'none';
+
+            const name = document.getElementById('roomName').value.trim();
+            const description = document.getElementById('roomDescription').value.trim();
+
+            if (!name) {
+                modalError.textContent = 'Bitte gib einen Raumnamen ein';
+                modalError.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird hinzugefügt...';
+
+            try {
+                const response = await fetch(`${API_URL}/rooms/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        description: description,
+                        user_id: parseInt(userId)
+                    })
+                });
+
+                if (response.ok) {
+                    closeAddRoomModal();
+                    loadRooms();
+                } else {
+                    const error = await response.json();
+                    modalError.textContent = error.error || 'Fehler beim Hinzufügen des Raums';
+                    modalError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error adding room:', error);
+                modalError.textContent = 'Verbindung zum Server fehlgeschlagen';
+                modalError.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Hinzufügen';
+            }
+        });
+
+        // Artikel Modal Funktionen
+        function openAddItemModal(roomId) {
+            currentRoomId = roomId;
+            document.getElementById('addItemModal').classList.add('show');
+            document.getElementById('itemName').focus();
+        }
+
+        function closeAddItemModal() {
+            document.getElementById('addItemModal').classList.remove('show');
+            document.getElementById('addItemForm').reset();
+            document.getElementById('itemModalError').style.display = 'none';
+            document.getElementById('expiryDateGroup').style.display = 'none';
+            currentRoomId = null;
+        }
+
+        document.getElementById('addItemModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAddItemModal();
+        });
+
+        // Ablaufdatum basierend auf Kategorie anzeigen oder ausblenden
+        document.getElementById('itemCategory').addEventListener('change', function() {
+            const expiryGroup = document.getElementById('expiryDateGroup');
+            const expiryInput = document.getElementById('itemExpiryDate');
+            
+            if (this.value === 'Ablaufartikel') {
+                expiryGroup.style.display = 'block';
+                expiryInput.required = true;
+            } else {
+                expiryGroup.style.display = 'none';
+                expiryInput.required = false;
+                expiryInput.value = '';
+            }
+        });
+
+        document.getElementById('addItemForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const modalError = document.getElementById('itemModalError');
+            const submitBtn = document.getElementById('submitItemBtn');
+            modalError.style.display = 'none';
+
+            const name = document.getElementById('itemName').value.trim();
+            const amount = parseInt(document.getElementById('itemAmount').value);
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const category = document.getElementById('itemCategory').value;
+            const expiryDate = document.getElementById('itemExpiryDate').value;
+
+            if (!name || !amount || !price || !category) {
+                modalError.textContent = 'Bitte fülle alle Pflichtfelder aus';
+                modalError.style.display = 'block';
+                return;
+            }
+
+            if (category === 'Ablaufartikel' && !expiryDate) {
+                modalError.textContent = 'Ablaufdatum ist für Ablaufartikel erforderlich';
+                modalError.style.display = 'block';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Wird hinzugefügt...';
+
+            try {
+                const itemData = {
+                    name: name,
+                    amount: amount,
+                    min_amount: 1,
+                    price: price,
+                    category: category,
+                    room_id: currentRoomId
+                };
+
+                if (category === 'Ablaufartikel' && expiryDate) {
+                    itemData.expiry_date = expiryDate;
+                }
+
+                const response = await fetch(`${API_URL}/items/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(itemData)
+                });
+
+                if (response.ok) {
+                    closeAddItemModal();
+                    // Räume neu laden oder Erfolgsmeldung anzeigen
+                } else {
+                    const error = await response.json();
+                    modalError.textContent = error.error || 'Fehler beim Hinzufügen des Artikels';
+                    modalError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error adding item:', error);
+                modalError.textContent = 'Verbindung zum Server fehlgeschlagen';
+                modalError.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Hinzufügen';
+            }
+        });
+
+        loadRooms();
+    </script>
+</body>
+</html>

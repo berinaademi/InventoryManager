@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1100px;
+            width: 100%;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .left-section {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+
+            img {
+                max-width: 250px;
+                height: auto;
+            }
+        }
+
+        .welcome-text {
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 28px;
+                font-weight: bold;
+                color: #000;
+                margin-bottom: 5px;
+            }
+
+            p {
+                font-size: 14px;
+                color: #666;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+
+            label {
+                display: block;
+                font-size: 14px;
+                color: #000;
+                margin-bottom: 5px;
+                font-weight: 500;
+            }
+
+            input {
+                width: 100%;
+                padding: 12px 15px;
+                border: none;
+                background-color: #c8e8f0;
+                border-radius: 5px;
+                font-size: 14px;
+                color: #666;
+
+                &::placeholder{
+                    color: #888;
+                }
+            }
+
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+            margin-bottom: 25px;
+
+            a {
+                font-size: 13px;
+                color: #000;
+                text-decoration: none;
+            }
+
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #7fc4d4;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+
+            &:hover {
+                background-color: #6ab3c4;
+            }
+
+            &:disabled{
+                background-color: #a0d4e0;
+                cursor: not-allowed;
+            }
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .register-link {
+            text-align: center;
+            font-size: 14px;
+            color: #000;
+
+            a {
+                color: #000;
+                text-decoration: underline;
+                font-weight: 500;
+            }
+        }
+
+        .right-section {
+            flex: 1;
+            background-color: #90d5e4;
+            border-radius: 30px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+
+        .illustration {
+            margin-bottom: 40px;
+
+            img {
+                max-width: 350px;
+                height: auto;
+            }
+        }
+
+        .tagline {
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .right-section {
+                order: -1;
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <div class="logo">
+                <img src="/frontend/assets/logo.png" alt="TRACKit Logo">
+            </div>
+            
+            <div class="welcome-text">
+                <h1>Willkommen zurück!</h1>
+                <p>Bitte gib unten deine Anmeldedaten ein</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">E-Mail Adresse*</label>
+                    <input type="email" id="email" placeholder="user@hotmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Passwort*</label>
+                    <input type="password" id="password" placeholder="••••••••••" required>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="#">Passwort vergessen?</a>
+                </div>
+
+                <button type="submit" class="login-button" id="loginBtn">Anmelden</button>
+
+                <div class="register-link">
+                    Noch kein Konto? <a href="register.html">Registrieren</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="right-section">
+            <div class="illustration">
+                <img src="/frontend/assets/illustration.png" alt="TRACKit Illustration">
+            </div>
+            
+            <div class="tagline">
+                <em>Mach Ordnung leicht<br>mit TRACKit</em>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:5000/api";
+
+        const form = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Prüfe, ob der Benutzer bereits angemeldet ist
+        if (localStorage.getItem('user_id')) {
+            window.location.href = 'dashboard.html';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Vorherige Fehlermeldung löschen
+            errorMessage.style.display = 'none';
+
+            // Formulardaten abrufen
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                showError('Bitte fülle alle Felder aus');
+                return;
+            }
+
+            // Button während der Anfrage deaktivieren
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Wird angemeldet...';
+
+            try {
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('user_id', data.id);
+                    localStorage.setItem('user_name', data.name);
+                    localStorage.setItem('user_email', data.email);
+
+                    window.location.href = 'dashboard.html';
+                } else {
+                    if (response.status === 401) {
+                        showError('Ungültige E-Mail oder Passwort. Bitte versuche es erneut :/');
+                    } else if (response.status === 404) {
+                        showError('Dieses Profil existiert nicht. Bitte registriere dich zuerst.');
+                    } else {
+                        showError(data.error || 'Anmeldung fehlgeschlagen');
+                    }
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Verbindung zum Server fehlgeschlagen. Bitte versuche es später erneut.');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Anmelden';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

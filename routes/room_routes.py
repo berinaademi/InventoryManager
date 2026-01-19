@@ -1,53 +1,32 @@
 from flask import Blueprint, request, jsonify
-from database import db
-from models.room import Room
+from services.room_service import RoomService
 
 room_bp = Blueprint("room", __name__)
 
 
 @room_bp.route("/", methods=["GET"])
 def get_rooms():
-    rooms = Room.query.all()
-    return jsonify([room.to_json() for room in rooms]), 200
-
-
-@room_bp.route("/<int:id>", methods=["GET"])
-def get_room(id):
-    room = Room.query.get_or_404(id)
-    return jsonify(room.to_json()), 200
+    rooms = RoomService.get_all_rooms()
+    return jsonify([room.to_json() for room in rooms])
 
 
 @room_bp.route("/", methods=["POST"])
 def create_room():
-    data = request.json
-    new_room = Room(
-        name=data.get("name"),
-        description=data.get("description")
-    )
-    db.session.add(new_room)
-    db.session.commit()
-
-    return jsonify(new_room.to_json()), 201
+    room = RoomService.create_room(request.json)
+    return jsonify(room.to_json()), 201
 
 
-@room_bp.route("/<int:id>", methods=["PUT"])
-def update_room(id):
-    room = Room.query.get_or_404(id)
-    data = request.json
-
-    room.name = data.get("name", room.name)
-    room.description = data.get("description", room.description)
-
-    db.session.commit()
-
-    return jsonify(room.to_json()), 200
+@room_bp.route("/<int:room_id>", methods=["PUT"])
+def update_room(room_id):
+    room = RoomService.update_room(room_id, request.json)
+    if not room:
+        return jsonify({"error": "Raum nicht gefunden"}), 404
+    return jsonify(room.to_json())
 
 
-@room_bp.route("/<int:id>", methods=["DELETE"])
-def delete_room(id):
-    room = Room.query.get_or_404(id)
-
-    db.session.delete(room)
-    db.session.commit()
-
-    return jsonify({"message": "Raum gelöscht"}), 200
+@room_bp.route("/<int:room_id>", methods=["DELETE"])
+def delete_room(room_id):
+    success = RoomService.delete_room(room_id)
+    if not success:
+        return jsonify({"error": "Raum nicht gefunden"}), 404
+    return jsonify({"message": "Raum gelöscht"})
