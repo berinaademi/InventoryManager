@@ -65,6 +65,6 @@ class UserService:
         if not check_password_hash(user.password, password):
             return False  # Passwort ist falsch
 
-        # Benutzer löschen (Kaskade löscht alle Räume und Artikel)
+        db.session.delete(user)
         db.session.commit()
         return True
