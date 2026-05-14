@@ -8,6 +8,10 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+## Preview
+
+![TRACKit Dashboard](assets/sc.png)
+
 Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
 
 ---
