@@ -2,6 +2,12 @@
 
 > _"Mach Ordnung leicht mit TRACKit"_
 
+![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
 
 ---
