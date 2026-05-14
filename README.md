@@ -1,7 +1,7 @@
 # **TRACKit** - Inventarverwaltung
 > *"Mach Ordnung leicht mit TRACKit"*
 
-Eine Inventawverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
+Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
 
 ---
 
@@ -12,7 +12,7 @@ Eine Inventawverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Rä
 - **Automatische Einkaufsliste**: Generiert sich aus Artikeln unter Mindestbestand
 - **Benachrichtigungen**: Warnungen bei niedrigem Bestand und bald ablaufenden Artikeln
 - **Ausgabenübersicht**: Berechnung der Gesamtausgaben basierend auf Artikelpreisen
-- **Responsive Desgin**: Funktioniert auf Desktop und Mobilgeräten
+- **Responsive Design**: Funktioniert auf Desktop und Mobilgeräten
 
 ---
 
