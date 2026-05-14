@@ -10,7 +10,7 @@
 
 ## Preview
 
-![TRACKit Dashboard](assets/sc.png)
+![TRACKit Dashboard](/frontend/assets/sc.png)
 
 Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
 
