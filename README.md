@@ -1,11 +1,13 @@
 # **TRACKit** - Inventarverwaltung
-> *"Mach Ordnung leicht mit TRACKit"*
+
+> _"Mach Ordnung leicht mit TRACKit"_
 
 Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Räumen organisieren können. Die Anwendung bietet automatische Einkaufslisten basierend auf Mindestbeständen, Ablaufdatum-Warnungen und eine übersichtliche Dashboard-Ansicht.
 
 ---
 
 ## Features
+
 - **Benutzerverwaltung**: Registrierung und Anmeldung mit sicherer Passwort-Hashierung.
 - **Raumverwaltung**: Erstellen und Organisieren von Lagerorten (Küche, Bad, Keller etc.)
 - **Artikelverwaltung**: Artikel mit Bestand, Mindestmenge, Preis, Kategorue und Ablaufdatum
@@ -16,8 +18,46 @@ Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Rä
 
 ---
 
+## Installation & Setup
+
+1. **Clone the repository**
+
+```bash
+   git clone https://github.com/berinaademi/InventoryManager.git
+   cd InventoryManager
+```
+
+2. **Create a virtual environment**
+
+```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
+
+```bash
+   pip install -r requirements.txt
+```
+
+4. **Run the app**
+
+```bash
+   python app.py
+```
+
+5. **Open in browser**
+
+```
+   http://localhost:5000
+```
+
+---
+
 ## Technologien
+
 ### Backend:
+
 - Python 3.8+
 - Flask
 - Flask-SQLAlchemy
@@ -26,6 +66,7 @@ Eine Inventarverwaltungs-App, mit der Benutzer ihre Artikel in verschiedenen Rä
 - SQLite
 
 ### Frontend:
+
 - HTML5
 - CSS3
 - JavaScript
@@ -84,6 +125,7 @@ trackit/
   ├── profile.html # Benutzerprofil
   └── search_results.html # Suchergebnisse
 ```
+
 ---
 
-*TRACKit für einfache Haushaltsverwaltung*
+_TRACKit für einfache Haushaltsverwaltung_
