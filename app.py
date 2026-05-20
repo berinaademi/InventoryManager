@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from database import db
 from flask import jsonify
+from flask import Flask, send_from_directory
 
 
 def create_app() -> Flask:
@@ -26,6 +27,14 @@ def create_app() -> Flask:
 
     with app.app_context():
         db.create_all()
+
+    @app.route('/')
+    def index():
+        return send_from_directory('frontend/html', 'login.html')
+
+    @app.route('/frontend/<path:path>')
+    def serve_frontend(path):
+        return send_from_directory('frontend', path)
 
     return app
 
