@@ -218,7 +218,7 @@
                 <button type="submit" class="login-button" id="loginBtn">Anmelden</button>
 
                 <div class="register-link">
-                    Noch kein Konto? <a href="register.html">Registrieren</a>
+                    Noch kein Konto? <a href="/frontend/html/register.html">Registrieren</a>
                 </div>
             </form>
         </div>
@@ -235,7 +235,7 @@
     </div>
 
     <script>
-        const API_URL = "http://127.0.0.1:5000/api";
+        const API_URL = "https://inventorymanager-u6v6.onrender.com/api";
 
         const form = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
@@ -243,7 +243,7 @@
 
         // Prüfe, ob der Benutzer bereits angemeldet ist
         if (localStorage.getItem('user_id')) {
-            window.location.href = 'dashboard.html';
+            window.location.href = '/html/dashboard.html';
         }
 
         form.addEventListener('submit', async (e) => {
@@ -284,7 +284,7 @@
                     localStorage.setItem('user_name', data.name);
                     localStorage.setItem('user_email', data.email);
 
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/html/dashboard.html';
                 } else {
                     if (response.status === 401) {
                         showError('Ungültige E-Mail oder Passwort. Bitte versuche es erneut :/');

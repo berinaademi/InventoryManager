@@ -217,7 +217,7 @@
                 <button type="submit" class="register-button" id="registerBtn">Registrieren</button>
 
                 <div class="login-link">
-                    Konto existiert? <a href="login.html">Anmelden</a>
+                    Konto existiert? <a href="/frontend/html/login.html">Anmelden</a>
                 </div>
             </form>
         </div>
@@ -234,7 +234,7 @@
     </div>
 
     <script>
-        const API_URL = "http://127.0.0.1:5000/api";
+        const API_URL = "https://inventorymanager-u6v6.onrender.com/api";
 
         const form = document.getElementById('registerForm');
         const errorMessage = document.getElementById('errorMessage');
@@ -287,7 +287,7 @@
                     
                     // Nach 2 Sekunden zur Login-Seite weiterleiten
                     setTimeout(() => {
-                        window.location.href = 'login.html';
+                        window.location.href = '/html/login.html';
                     }, 2000);
                 } else {
                     showError(data.error || 'Registrierung fehlgeschlagen. Benutzer existiert möglicherweise bereits.');

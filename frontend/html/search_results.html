@@ -173,11 +173,11 @@
 
     <script src="/frontend/js/components.js"></script>
     <script>
-        const API_URL = "http://127.0.0.1:5000/api";
+        const API_URL = "https://inventorymanager-u6v6.onrender.com/api";
         const userId = localStorage.getItem('user_id');
 
         if (!userId) {
-            window.location.href = 'login.html';
+            window.location.href = '/html/login.html';
         }
 
         // Suchanfrage aus URL holen    
@@ -246,7 +246,7 @@
                 document.getElementById('roomsSection').style.display = 'block';
                 const roomsGrid = document.getElementById('roomsResults');
                 roomsGrid.innerHTML = rooms.map(room => `
-                    <div class="result-card" onclick="window.location.href='rooms.html?room_id=${room.id}'">
+                    <div class="result-card" onclick="window.location.href='/html/rooms.html?room_id=${room.id}'">
                         <div class="result-card-header">
                             <div class="result-icon">
                                 <i class="fas fa-door-open"></i>
@@ -265,7 +265,7 @@
                 document.getElementById('itemsSection').style.display = 'block';
                 const itemsGrid = document.getElementById('itemsResults');
                 itemsGrid.innerHTML = items.map(item => `
-                    <div class="result-card" onclick="window.location.href='rooms.html?room_id=${item.room_id}'">
+                    <div class="result-card" onclick="window.location.href='/html/rooms.html?room_id=${item.room_id}'">
                         <div class="result-card-header">
                             <div class="result-icon">
                                 <i class="fas fa-box"></i>

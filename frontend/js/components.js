@@ -11,12 +11,12 @@
                 </div>
                 <div style="flex: 1; overflow-y: auto;">
                     <ul class="nav-links">
-                        <li><a href="dashboard.html"><i class="fas fa-home"></i> Startseite</a></li>
-                        <li><a href="locations.html"><i class="fas fa-map-marker-alt"></i> Lagerorte</a></li>
-                        <li><a href="shopping_list.html"><i class="fas fa-shopping-cart"></i> Einkaufsliste</a></li>
-                        <li><a href="items.html"><i class="fas fa-box"></i> Alle Artikeln</a></li>
-                        <li><a href="notifications.html"><i class="fas fa-bell"></i> Benachrichtigung</a></li>
-                        <li><a href="profile.html"><i class="fas fa-user"></i> Mein Profil</a></li>
+                        <li><a href="/html/dashboard.html"><i class="fas fa-home"></i> Startseite</a></li>
+                        <li><a href="/html/locations.html"><i class="fas fa-map-marker-alt"></i> Lagerorte</a></li>
+                        <li><a href="/html/shopping_list.html"><i class="fas fa-shopping-cart"></i> Einkaufsliste</a></li>
+                        <li><a href="/html/items.html"><i class="fas fa-box"></i> Alle Artikeln</a></li>
+                        <li><a href="/html/notifications.html"><i class="fas fa-bell"></i> Benachrichtigung</a></li>
+                        <li><a href="/html/profile.html"><i class="fas fa-user"></i> Mein Profil</a></li>
                     </ul>
                 </div>
                 <button class="btn-logout" id="logoutBtn">ABMELDEN</button>
@@ -75,7 +75,7 @@
         if (logoutBtn) {
             logoutBtn.onclick = () => {
                 localStorage.clear();
-                window.location.href = 'login.html';
+                window.location.href = '/html/login.html';
             };
         }
 
@@ -86,7 +86,7 @@
         function performSearch() {
             const query = searchInput.value.trim();
             if (query) {
-                window.location.href = `search_results.html?q=${encodeURIComponent(query)}`;
+                window.location.href = `/html/search_results.html?q=${encodeURIComponent(query)}`;
             }
         }
 

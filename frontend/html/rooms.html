@@ -321,17 +321,17 @@
     <script src="/frontend/js/components.js"></script>
     
     <script>
-        const API_URL = "http://127.0.0.1:5000/api";
+        const API_URL = "https://inventorymanager-u6v6.onrender.com/api";
         const userId = localStorage.getItem('user_id');
         const urlParams = new URLSearchParams(window.location.search);
         const roomId = urlParams.get('room_id');
 
         if (!userId) {
-            window.location.href = 'login.html';
+            window.location.href = '/html/login.html';
         }
 
         if (!roomId) {
-            window.location.href = 'locations.html';
+            window.location.href = '/html/locations.html';
         }
 
         let currentRoom = null;
@@ -344,7 +344,7 @@
                 currentRoom = rooms.find(r => r.id == roomId);
 
                 if (!currentRoom || currentRoom.user_id != userId) {
-                    window.location.href = 'locations.html';
+                    window.location.href = '/html/locations.html';
                     return;
                 }
 
@@ -584,7 +584,7 @@
                 if (response.ok) {
                     closeDeleteConfirmModal();
                     if (deleteTarget.type === 'room') {
-                        window.location.href = 'locations.html';
+                        window.location.href = '/html/locations.html';
                     } else {
                         loadRoomData();
                     }
