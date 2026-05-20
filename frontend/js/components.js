@@ -54,8 +54,8 @@
         const sidebar = document.getElementById('sidebar');
         const menuToggle = document.getElementById('menuToggle');
 
-        // Gespeicherten Zustand auf allen seiten anwenden
-        if (sidebar && wrapper) {
+        // Gespeicherten Zustand auf allen Seiten anwenden (nur Desktop)
+        if (sidebar && wrapper && window.innerWidth > 768) {
             const isClosed = localStorage.getItem('sidebarClosed') === 'true';
             if (isClosed) {
                 sidebar.classList.add('closed');
@@ -64,11 +64,18 @@
         }
 
         if (menuToggle && sidebar && wrapper) {
-            menuToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('closed');
-                wrapper.classList.toggle('sidebar-closed');
-                localStorage.setItem('sidebarClosed', sidebar.classList.contains('closed'));
-            });
+            function toggleSidebar(e) {
+                e.preventDefault();
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('open');
+                } else {
+                    sidebar.classList.toggle('closed');
+                    wrapper.classList.toggle('sidebar-closed');
+                    localStorage.setItem('sidebarClosed', sidebar.classList.contains('closed'));
+                }
+            }
+            menuToggle.addEventListener('click', toggleSidebar);
+            menuToggle.addEventListener('touchstart', toggleSidebar);
         }
 
         const logoutBtn = document.getElementById('logoutBtn');
@@ -79,7 +86,7 @@
             };
         }
 
-        //Suchfunktionalität
+        // Suchfunktionalität
         const searchInput = document.getElementById('searchInput');
         const searchIcon = document.getElementById('searchIcon');
 
@@ -91,7 +98,6 @@
         }
 
         if (searchInput) {
-            // Suche bei Enter-Taste ausführen
             searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     performSearch();
@@ -106,7 +112,7 @@
             searchIcon.style.cursor = 'pointer';
         }
 
-        // Aktiven link hervorheben
+        // Aktiven Link hervorheben
         const currentPath = window.location.pathname;
         document.querySelectorAll('.nav-links a').forEach(link => {
             if (currentPath.includes(link.getAttribute('href'))) {
