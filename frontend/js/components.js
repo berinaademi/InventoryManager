@@ -64,11 +64,11 @@
         }
 
         if (menuToggle && sidebar && wrapper) {
-            menuToggle.onclick = function() {
+            menuToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('closed');
                 wrapper.classList.toggle('sidebar-closed');
                 localStorage.setItem('sidebarClosed', sidebar.classList.contains('closed'));
-            };
+            });
         }
 
         const logoutBtn = document.getElementById('logoutBtn');

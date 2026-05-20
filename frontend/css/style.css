@@ -249,6 +249,12 @@ body {
     color: #666;
 }
 
+#menuToggle {
+    cursor: pointer;
+    padding: 10px;
+    -webkit-tap-highlight-color: transparent;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 0;
