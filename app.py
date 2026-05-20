@@ -36,6 +36,10 @@ def create_app() -> Flask:
     def serve_frontend(path):
         return send_from_directory('frontend', path)
 
+    @app.route('/html/<path:path>')
+    def serve_html(path):
+        return send_from_directory('frontend/html', path)
+
     return app
 
 
