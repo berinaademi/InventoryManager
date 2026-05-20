@@ -8,6 +8,8 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+🌐 **Live Demo**: [TRACKit auf Render](https://inventorymanager-u6v6.onrender.com)
+
 ## Preview
 
 ![TRACKit Dashboard](/frontend/assets/sc.png)
